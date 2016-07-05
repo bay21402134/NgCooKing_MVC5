@@ -1,0 +1,77 @@
+﻿@model IEnumerable<NgCooking_Asp.net.Models.Communaute>
+
+
+@{
+    ViewBag.Title = "Communautes";
+
+}
+
+<div class="col-xs-12 col-sm-9">
+    <div class="content" id="content_users">
+        <h1 class="page-title">La communauté</h1>
+
+        <section class="section">
+            <h2 class="title">~ Les meilleures cuistots ~</h2>
+            <div class="sort">
+
+                <p>
+                    <span class="span-label">Trier par :</span>
+                    @Html.DropDownList( "Trie", ViewData["OrderBy"] as List<SelectListItem> )
+
+                </p>
+            </div>
+
+
+            <div class="users row">
+                @foreach( var item in Model.Take( ( int )ViewData["LimitCommunaute"] ) )
+
+                {
+                    <div class="col-xs-6 col-sm-3 user">
+                        <a href="Details/@item.id">
+
+                            <img src="~/@item.Picture" alt="Hetta Van Deventer">
+                            <div class="text">
+                                <p class="name">@item.FirstName @item.Surname</p>
+                                <p class="level">
+                                    <span class="stars">
+                                        @for( int i = 1 ; i <= @item.Level ; i++ )
+                                        {
+                                            <span class="glyphicon glyphicon-star"></span>
+                                        }
+                                    </span>
+                                    @{
+                                        switch( @item.Level )
+                                        {
+                                            case 1:
+                                                <span class="status">NOVICE</span>
+                                            break;
+                                            case 2:
+                                                <span class="status">CONFIRME</span>
+                                            break;
+                                            default:
+                                                <span class="status">EXPERT</span>
+                                            break;
+                                        }
+                                         
+                                    }
+
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                                        }
+            </div>
+            <div class="row showmore">
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn_color1">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+
+                        @Html.ActionLink( "Afficher d'avantage", "Index", "Communautes" )
+
+
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

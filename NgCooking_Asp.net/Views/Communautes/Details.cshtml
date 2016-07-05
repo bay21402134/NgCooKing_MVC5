@@ -1,0 +1,121 @@
+﻿@model NgCooking_Asp.net.Models.Communaute
+
+@{
+    ViewBag.Title = "Details";
+    var RecettePerso = ViewData["RecettePerso"] as List<NgCooking_Asp.net.Models.Recettes>;
+}
+
+<div class="col-xs-12 col-sm-9">
+    <div class="content" id="content_communaute_details">
+
+        <section class="section details">
+            <div class="row">
+                <div class="col-vxs-12 col-xs-6 col-sm-5">
+                    <div class="avatar-wrap">
+                        <img class="avatar" src="~/@Model.Picture" alt="Hetta Van Deventer">
+                    </div>
+                </div>
+                <div class="col-vxs-12 col-xs-6 col-sm-7">
+                    <div class="infos">
+                        <h1 class="name">@(@Model.FirstName + " " +Model.Surname) </h1>
+                        <p class="level">
+                            <span class="stars">
+                                @for( int i = 1 ; i <= @Model.Level ; i++ )
+                                {
+                                    <span class="glyphicon glyphicon-star"></span>
+                                }
+                               
+                            </span>
+                           @{
+                               switch( @Model.Level )
+                               {
+                                   case 1:
+                                    <span class="status">NOVICE</span>
+                                   break;
+                                   case 2:
+                                    <span class="status">CONFIRME</span>
+                                   break;
+                                   default:
+                                    <span class="status">EXPERT</span>
+                                   break;
+                               }
+
+
+                        }
+                        </p>
+                        <p class="city"><span class="fwb">Ville : </span>@Model.City</p>
+                        <p class="age"><span class="fwb">Age : </span>@(2016 - @Model.Birth) ans</p>
+                        <p class="shared"><span class="fwb">@Model.FirstName</span> a partagé <span class="nb">@RecettePerso.Count() recettes</span></p>
+                        <p class="bio"><span class="fwb">BIO : </span>@Model.Bio</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Afficher le bloc ci-dessous uniquement si lutilisateur connecté se rend sur sa propre page -->
+        <section class="section newrecette">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p class="c">Vous en avez sous la toque ?!</p>
+                    <p class="b">
+                        <a href="/Recettes/Create" class="btn btn_color1"><span class="glyphicon glyphicon-plus-sign"></span><span>Créez une nouvelle recette</span></a>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="title">~ Les recettes de @Model.FirstName ~</h2>
+            <div class="recettes row">
+               
+                @foreach( var item in RecettePerso.Take(4) )
+                {
+
+                    <div class="col-xs-6 col-sm-3 recette">
+                        <a href="/Recettes/Details/@item.recettesId">
+                            <img src="~/@item.picture" alt="Le tajine de ta maman">
+                            <div class="top" title="note : 3,2/5">
+                                <span class="note">
+                                    @{
+                                        int somme = 0;
+                                        int indice = 0;
+                                        foreach( var item1 in item.Comments )
+                                        {
+                                            somme += item1.mark;
+                                            indice++;
+                                        }
+
+                                        if( indice > 0 )
+                                        {
+                                            for( int i = 1 ; i <= somme / indice ; i++ )
+                                            {
+                                                <span class="glyphicon glyphicon-heart"></span>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            for( int i = 1 ; i <= somme ; i++ )
+                                            {
+                                                <span class="glyphicon glyphicon-heart"></span>
+                                            }
+
+                                        }
+
+                                    }
+
+
+                                </span>
+                            </div>
+                            <div class="bot">
+                                <p class="name">@item.recettesId</p>
+                            </div>
+                        </a>
+                    </div>
+
+                                        }
+                
+                
+            </div>
+        </section>
+    </div>
+</div>

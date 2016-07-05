@@ -1,0 +1,137 @@
+﻿ 
+@{
+    ViewBag.Title = "Index";
+}
+
+ 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>NgCooking</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="c17 engineering" />
+    <meta name="copyright" content="c17 engineering" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, minimal-ui" />
+    <meta name="apple-mobile-web-app-title" content="c17 engineering, recettes de cuisine à partager">
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="shortcut icon" href="img/favicon.png" />
+    <link rel="image_src" href="~/img/favicon.png" />
+    <link rel="icon" type="image/png" href="~/img/favicon.png" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="~/css/reset.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.2.min.js"></script>
+</head>
+<body>
+     
+    <div id="wrapper">
+        <header id="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <a href="/" class="logo">
+                            <img src="~/img/logo_header.png" alt="">
+                        </a>
+                        <div class="desc">
+                            <p>Partagez vos meilleures recettes avec<br />la communauté NgCooking</p>
+                            <p><a class="link" href="/"><strong>@ViewData["Recettes"] recettes</strong> à découvrir !</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="mobile-menu-btn">
+                <i class="glyphicon glyphicon-menu-hamburger"></i>
+            </button>
+        </header>
+        <main id="main">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3" id="col-nav">
+                        <button type="button" id="mobile-close-btn">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                        <nav id="nav">
+                            <ul class="menu">
+
+
+                                <li class="page_hom active">
+                                    @Html.ActionLink( "Accueil", "Home", "Recettes" )
+                                </li>
+
+                                <li class="page_rec">
+                                    @Html.ActionLink( "Recettes", "Recettes", "Recettes" )
+                                </li>
+                                <li class="page_ing">
+                                    @Html.ActionLink( "Ingredients", "Ingredients", "Ingredients" )
+                                </li>
+                                <li class="page_com">
+                                    @Html.ActionLink( "Communauté", "Communautes", "Communautes" )
+                                 </li>
+
+                            </ul>
+                            <div class="account-area">
+                                <button type="button" class="button connect" data-popin-open="connect_popin"><span class="icon"></span>Connexion</button>
+                                <a href="communaute_details.html" class="button account"><span class="icon"></span>Mon profil</a>
+                                <button type="button" class="button deconnect"><span class="glyphicon glyphicon-off"></span>Deconnexion</button>
+                            </div>
+                        </nav>
+                    </div>
+
+                    @RenderBody()
+
+                </div>
+            </div>
+        </main>
+        <footer id="footer">
+            <div class="container">
+                <div class="row cuisto-img-wrap">
+                    <div class="hidden-xs col-sm-3">
+                        <div class="cuisto-img"></div>
+                    </div>
+                    <div class="col-xs-12 col-sm-9">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse optio repellat temporibus molestiae ducimus quibusdam eum maiores voluptatum sapiente reprehenderit. Est, modi, tenetur. Tempora perferendis eveniet unde numquam cupiditate nam?</p>
+                        <div class="hr"></div>
+                        <p class="copyright">copyright ngcooking 2015-2016</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="popin" data-popin="connect_popin">
+        <div class="popin-content">
+            <div class="popin-scroll">
+                <p class="popin-title">Connexion</p>
+                <form action="#">
+                    <p>
+                        <label for="co_user" class="fwb">Identifiant (email)</label>
+                        <input id="co_user" class="wide" type="text" />
+                    </p>
+                    <p>
+                        <label for="co_pwd" class="fwb">Mot de passe</label>
+                        <input id="co_pwd" class="wide" type="text" />
+                    </p>
+                    <p class="ac nm mt2">
+                        <button type="button" class="btn btn_big btn_color1"><span class="glyphicon glyphicon-ok"></span><span class="fwb uc">Valider</span></button>
+                    </p>
+                </form>
+            </div>
+            <button class="close popin-close"><span class="glyphicon glyphicon-remove"></span></button>
+        </div>
+        <div class="popin-backlayer"></div>
+    </div>
+    <div id="mobile-back-layer"></div>
+    <script type="text/javascript" src="~/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="~/js/jquery.main.js"></script>
+    
+
+     @Scripts.Render( "~/bundles/jquery" )
+     @Scripts.Render( "~/Scripts/jquery-3.0.0.js" )
+     @Scripts.Render( "~/Scripts/jquery-3.0.0.min.js" )
+</body>
+</html>

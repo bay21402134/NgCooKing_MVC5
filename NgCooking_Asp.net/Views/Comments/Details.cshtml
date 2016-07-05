@@ -1,0 +1,58 @@
+﻿@model NgCooking_Asp.net.Models.Comments
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Comments</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Recettes.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Recettes.name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.commentsId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

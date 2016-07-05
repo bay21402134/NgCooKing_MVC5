@@ -1,0 +1,67 @@
+﻿@model IEnumerable<NgCooking_Asp.net.Models.Ingredients>
+
+@{
+    ViewBag.Title = "Ingredients";
+}
+
+
+<div class="col-xs-12">
+    <div class="result">
+
+        <div class="ingredients row" id="byby">
+            @foreach( var item in Model.Take( ( int )ViewData["LimiteIngredient"] ) )
+            {
+                <div class="col-xs-12 ingredient">
+                    <div class="ing-wrap">
+                        <div class="top">
+                            <p class="name">@item.Name</p>
+                            <p class="category">@item.CategoriesForeignKey</p>
+                            <img class="img" src="~/img/ingredients/@item.Picture" alt="Poulet">
+                            <div class="calories-wrap">
+                                <div class="val">
+                                    <span>@item.Calories kcal</span>
+                                    <div class="battery">
+                                        <!-- pourcentage ci-dessous à moduler en fonction du nombre de calories de l'ingredient sur nombre de calories max -->
+                                        <div class="level" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bot">
+                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo pariatur obcaecati ut, sit veniam molestias eius cum. Facere quibusdam laborum doloribus, incidunt omnis ipsum alias vel est molestiae.</p>
+                            <div class="list">
+                                <p class="list-title">Aliments similaires</p>
+                                <ul>
+                                    @foreach( var item1 in Model.Where( x => x.CategoriesForeignKey.Equals( item.CategoriesForeignKey ) ).Reverse().Take( 4 ) )
+                                    {
+                                        <li class="item">
+                                            <img class="item-img" src="~/img/ingredients/@item1.Picture" alt="Boeuf">
+                                            <p class="item-name" title="Boeuf">@item1.Name</p>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+    <div class="row showmore">
+        <div class="col-xs-12">
+            <button type="button" id="btn" class="btn btn_color1">
+                <span class="glyphicon glyphicon-chevron-down"></span>
+
+                @Html.ActionLink( "Afficher d'avantage", "Index", "Ingredients" )
+
+            </button>
+        </div>
+
+
+
+    </div>
+</div>
+

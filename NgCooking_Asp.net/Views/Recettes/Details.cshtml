@@ -1,0 +1,188 @@
+﻿@model NgCooking_Asp.net.Models.Recettes
+
+@{
+    ViewBag.Title = "Details";
+    var galList = ViewData["Recette"] as List<NgCooking_Asp.net.Models.Recettes>;
+    int SommeCalorie = 0;
+
+    int ind = ( (int)ViewData["indice"] > 0 ) ? (int)ViewData["indice"] : 1;
+
+}
+
+<div class="col-xs-12 col-sm-9">
+    <div class="content" id="content_recettes_details">
+        <section class="section">
+            <div class="row">
+                <div class="col-xs-4">
+                    <img class="recette_img" src="~/@Model.picture" alt="Le tajine de ta maman">
+                </div>
+                <div class="col-xs-8">
+                    <h1 class="rec_name">@Model.name</h1>
+                    <p class="rec_note">
+                        <span class="stars">
+                            @{
+                                if( ( int )ViewData["indice"] > 0 )
+                                {
+                                    for( int i = 1 ; i <= ( int )ViewData["Somme"] / ( int )ViewData["indice"] ; i++ )
+                                    {
+                                        <span class="glyphicon glyphicon-heart"></span>
+                                    }
+                                }
+                                else
+                                {
+
+                                    for( int i = 1 ; i <= ( int )ViewData["Somme"] ; i++ )
+                                    {
+                                        <span class="glyphicon glyphicon-heart"></span>
+                                    }
+
+                                }
+                            }
+                        </span>
+                        <span class="notes"> | @(( int )ViewData["Somme"] / @ind) /5 - @Model.Comments.Count() votes</span>
+                    </p>
+                    <div class="ingredients_list">
+                        <p class="list-title">Ingrédients</p>
+                        <ul class="list">
+
+                            @foreach( var item in Model.Ingredients )
+                            {
+                                SommeCalorie += item.Calories;
+                                <li class="item">
+                                    <img class="item-img" src="~/img/ingredients/@item.Picture" alt="tomate">
+                                    <p class="item-name" title="tomate">@item.Name</p>
+                                </li>
+                            }
+
+
+
+                        </ul>
+                    </div>
+                    <p class="rec_cal">Valeur calorique <span class="for">(100g)</span> : <span class="val">@SommeCalorie kcal</span></p>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="overline-title"><span class="text">Préparation</span></h2>
+                </div>
+                <div class="col-xs-12">
+                    @Html.Raw( @Model.preparation )
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2 class="overline-title"><span class="text">Commentaires</span></h2>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <div class="panel">
+                        <div class="filters">
+                            <h3 class="panel_title">Donnez-nous votre avis !</h3>
+                            <form action="">
+                                <div class="filter">
+                                    <p><label for="">Notez cette recette</label></p>
+                                    <p>
+                                        @Html.DropDownList( "Trie", ViewData["Vote"] as List<SelectListItem> )
+                                    </p>
+
+
+
+                                </div>
+                                <div class="filter">
+                                    <p><label for="">Le titre de votre commentaire</label></p>
+                                    <p><input type="text" placeholder="ex: Amazingue !" required></p>
+                                </div>
+                                <div class="filter">
+                                    <p><label for="">Votre commentaire</label></p>
+                                    <textarea name="" id="" class="wide" placeholder="ex: Franchement cette NgRecette, c’est de la bombe. Le genre de saveurs qui t’éveillent les papilles, t’as vu ! Woula, j’ai kiffé" required></textarea>
+                                </div>
+                                <div class="ar">
+                                    <input type="submit" class="btn btn_color1" value="Poster !">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <ul class="comments">
+                        @foreach( var item in Model.Comments )
+                        {
+                            <li class="comment">
+                                <p class="name">@item.title<span class="note">@item.mark/5</span></p>
+                                @*<p class="by">par <a href="Details/@ViewData["Lien"]">@ViewData["communaute"]</a></p>*@
+                                <p class="by">
+                                    parr
+                                    @Html.ActionLink( @ViewData["communaute"].ToString(), "Details/" + ViewData["Lien"].ToString(), "Communautes" )
+                                </p>
+
+                                <p class="text">@item.comment</p>
+                            </li>
+                        }
+
+
+                    </ul>
+                    <div class="row showmore">
+                        <div class="col-xs-12">
+                            <button type="button" class="btn btn_grey"><span class="glyphicon glyphicon-chevron-down"></span>Afficher d'avantage</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="title">~ Vous aimerez aussi... ~</h2>
+            <div class="recettes row">
+                @foreach( var item in galList.Take( 4 ) )
+                {
+
+                    <div class="col-xs-6 col-sm-3 recette">
+                        <a href="@item.recettesId">
+                            <img src="~/@item.picture" alt="Le tajine de ta maman">
+                            <div class="top" title="note : 2,4/5">
+                                <span class="note">
+                                    @{
+                                        int somme = 0;
+                                        int indice = 0;
+                                        foreach( var item1 in item.Comments )
+                                        {
+                                            somme += item1.mark;
+                                            indice++;
+                                        }
+
+                                        if( indice > 0 )
+                                        {
+                                            for( int i = 1 ; i <= somme / indice ; i++ )
+                                            {
+                                                <span class="glyphicon glyphicon-heart"></span>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            for( int i = 1 ; i <= somme ; i++ )
+                                            {
+                                                <span class="glyphicon glyphicon-heart"></span>
+                                            }
+
+                                        }
+
+                                    }
+                                </span>
+                            </div>
+                            <div class="bot">
+                                <p class="name">@item.name</p>
+                            </div>
+                        </a>
+                    </div>
+
+
+                                        }
+
+            </div>
+        </section>
+
+    </div>
+</div>
