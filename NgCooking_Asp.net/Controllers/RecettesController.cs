@@ -27,6 +27,8 @@ namespace NgCooking_Asp.net.Controllers
             return View( db.Recettes.ToList() );
         }
 
+        public ActionResult ListIngredients2( string ingredients )
+        { return View(); }
 
         public ActionResult ListIngredients( string ingredients )
         {
@@ -59,6 +61,15 @@ namespace NgCooking_Asp.net.Controllers
             return View();
         }
 
+        public ActionResult SearchByName( string input )
+        {
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
+            var recettes = db.Recettes.Where(x => x.name.ToLower() == input.ToLower()).ToList();
+            ViewData["dataByName"] = recettes;
+            return View( "Ingredients", recettes );
+
+        }
 
 
         // GET: Recettes/Details/5

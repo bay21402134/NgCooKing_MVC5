@@ -6,11 +6,7 @@
     int SommeCalorie = 0;
 }
 
-<script>
-
-
-    
-
+<script> 
     $(function () {
         var link = '@Url.Action( "ListIngredients", "Recettes", new { ingredients = "_myid_" } )';
         $('#ddlcity').change(function () {
@@ -109,7 +105,7 @@
                                 @{
                                     if( ViewData["Ingredient"] != null )
                                     {
-                                       
+
                                         foreach( var item in ItemsIngredient )
                                         {
                                             <li class="item" id="listeIng">
@@ -132,13 +128,13 @@
                         </div>
                         <div class="ac">
                             <p class="recette_total_calories">
-                               
-                                 <span class="tit">Valeur calorique <span class="mass">(100g)</span> : </span><span class="val">@SommeCalorie<span class="unit">kcal</span></span>
-                            
+
+                                <span class="tit">Valeur calorique <span class="mass">(100g)</span> : </span><span class="val">@SommeCalorie<span class="unit">kcal</span></span>
+
                             </p>
                         </div>
                     </div>
-                                
+
                     <div class="col-xs-12">
                         <div class="hr mb2"></div>
                     </div>

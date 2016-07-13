@@ -14,6 +14,8 @@ namespace NgCooking_Asp.net.Controllers
     {
         private ngCookingDBEntities db = new ngCookingDBEntities();
 
+
+       
         // GET: Ingredients
         public ActionResult Index()
         {
@@ -33,22 +35,47 @@ namespace NgCooking_Asp.net.Controllers
 
             return View( ingredients.ToList() );
         }
-         
+
         public ActionResult Ingredients()
         {
             TempData["test"] = 0;
             ViewData["LimiteIngredient"] = 4;
             ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
             var ingredients = db.Ingredients.Include(i => i.Categories);
             return View( ingredients.ToList() );
         }
 
-        public ActionResult SearchByName(string input)
+        public ActionResult SearchByCategorie( string input )
+        { 
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
+            var ingredients = db.Ingredients.Where(x => x.CategoriesForeignKey == input.ToLower()).ToList();
+            ViewData["dataByName"] = ingredients;
+            return View( "Ingredients" , ingredients);
+            
+        }
+
+        public ActionResult SearchByCalorie( int[ ] ints )
         {
-            TempData["test"] = 0;
-            ViewData["LimiteIngredient"] = 4;
-            var ingredients = db.Ingredients.Include(i => i.Categories).Where(x => x.ingredientsId.Contains(input));
-            return View( ingredients.ToList() );
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
+            int min = ints[0];
+            int max = ints[1];
+            var ingredients = db.Ingredients.Where(x => x.Calories >= min && x.Calories <= max ).ToList();
+            ViewData["dataByName"] = ingredients;
+            return View( "Ingredients", ingredients );
+
+        }
+
+        public ActionResult SearchByName( string input )
+        {
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
+            var ingredients = db.Ingredients.Where(x => x.ingredientsId.Contains(input)).ToList();
+            ViewData["dataByName"] = ingredients;
+            return View( "Ingredients", ingredients );
+
         }
 
         // GET: Ingredients/Details/5
@@ -140,6 +167,7 @@ namespace NgCooking_Asp.net.Controllers
         }
 
         // POST: Ingredients/Delete/5
+
         [HttpPost, ActionName( "Delete" )]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed( string id )

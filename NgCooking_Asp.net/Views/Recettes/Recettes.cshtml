@@ -1,9 +1,39 @@
-﻿
+﻿  
 @model IEnumerable<NgCooking_Asp.net.Models.Recettes>
 
 @{
     ViewBag.Title = "Recettes";
+    var SerchByName = ViewData["dataByName"] as List<NgCooking_Asp.net.Models.Recettes>;
+    var TempsList = Model.ToList().Take(4);
+    var model = ViewData["Model"] as List<NgCooking_Asp.net.Models.Recettes>;
+
 }
+
+<script>
+
+    function AjaxPost(url, Aux) {
+        $.ajax({
+            url: url,
+            data: { input: Aux },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                $("body").html(data);
+            },
+            error: function (reponse) {
+            }
+        });
+    }
+    $(function () {
+        $('#SearchByName').change(function () {
+            var url = "/Recettes/SearchByName/";
+            var Aux = $('#SearchByName').val();
+            AjaxPost(url, Aux);
+        });
+    });
+
+</script>
+
 
 <div class="col-xs-12 col-sm-9">
     <div class="content" id="content_recettes">
@@ -19,7 +49,7 @@
                             <form action="">
                                 <div class="filter">
                                     <p><label for="">Nom de la recette</label></p>
-                                    <p><input type="text" placeholder="ex: Tajine de poulet"></p>
+                                    <p><input id="SearchByName" type="text" placeholder="ex: Tajine de poulet"></p>
                                 </div>
                                 <div class="filter">
                                     <p><label for="">Ingrédient(s) utlisé(s) pour la recette</label></p>
@@ -65,9 +95,18 @@
         <section class="section">
             <h2 class="title">~ Meilleures recettes ~</h2>
             <div class="recettes row">
-                @foreach( var item in Model.Take( 4 ) )
 
-                {
+                @{ 
+
+                    if( ( SerchByName != null ) && ( SerchByName.Count() > 0 ) )
+                    {
+                        TempsList = SerchByName;
+
+                    }
+
+                    foreach( var item in Model.Take( 4 ) )
+
+                    {
 
                     <div class="col-xs-6 col-sm-3 recette">
                         <a href="Details/@item.recettesId">
@@ -102,7 +141,7 @@
 
                                     }
 
-
+                                    }
                                 </span>
                             </div>
                             <div class="bot">
@@ -111,7 +150,7 @@
                         </a>
                     </div>
 
-
+                                            }
                                         }
             </div>
         </section>

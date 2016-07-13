@@ -2,36 +2,70 @@
 
 @{
     ViewBag.Title = "Ingredients";
+    var SerchByName = ViewData["dataByName"] as List<NgCooking_Asp.net.Models.Ingredients>;
+    var TempsList = Model.ToList().Take(4);
+    var model = ViewData["Model"] as List<NgCooking_Asp.net.Models.Ingredients>;
+    
 }
-
-
 <script>
-
+     
+    function AjaxPost(url, Aux) {
+        $.ajax({
+            url: url,
+            data: { input: Aux },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                $("body").html(data);
+            },
+            error: function (reponse) {
+            }
+        });
+    }
     $(function () {
-
         $('#SearchByName').change(function () {
             var url = "/Ingredients/SearchByName/";
             var Aux = $('#SearchByName').val();
-
-            $.ajax({
-                url: url,
-                data: { input: Aux },
-                cache: false,
-                type: "POST",
-                success: function (data) {
-
-                },
-                error: function (reponse) {
-                    alert("error : " + reponse);
-                }
-            });
+            AjaxPost(url, Aux);
         });
     });
-</script>
+    $(function () {
+        $('#SearchByCategorie').change(function () {
+            var url = "/Ingredients/SearchByCategorie/";
+            var Aux = $('#SearchByCategorie').val();
+            AjaxPost(url, Aux);
+        });
+    });
 
-<div class="col-xs-12 col-sm-9">
+    $(function () {
+        $('#N2').change(function () {
+            var url = "/Ingredients/SearchByCalorie/";
+            var N1 = $('#N1').val();
+            var N2 = $('#N2').val();
+  
+            $.ajax({
+                url: url,
+                data: JSON.stringify([N1, N2]),
+                 
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                success: function (data) {
+                    alert(data);
+                    $("body").html(data);
+                },
+                error: function (reponse) {
+                }
+            });
+             
+        });
+    });
+
+    
+
+</script>
+<div id="" class="col-xs-12 col-sm-9">
     <div class="content" id="content_ingredients">
-        <h1 class="page-title">Les ingredients</h1>
+        <h1 class="page-title">Les ingredients </h1>
         <div class="row">
             <div class="col-xs-12">
                 <div class="panel">
@@ -47,16 +81,16 @@
                                     <div class="filter">
                                         <p><label for="">Catégorie</label></p>
                                         <p>
-                                            @Html.DropDownList( "StudentGender", new SelectList( Model.Select( x => x.CategoriesForeignKey ).Distinct().ToList().ConvertAll( d => d.ToUpper() ) ) )
+                                            @Html.DropDownList( "SearchByCategorie", new SelectList( model.Select( x => x.CategoriesForeignKey ).Distinct().ToList().ConvertAll( d => d.ToUpper() ) ),"",new object() )
                                         </p>
                                     </div>
                                     <div class="filter">
                                         <p><label for="">Nombre de calories <span class="fwn">(kcal/100g)</span></label></p>
                                         <p>
                                             <span class="span-label">entre :</span>
-                                            <input type="number" class="mr0" placeholder="ex: 70">
+                                            <input id="N1" type="number" class="mr0" placeholder="ex: 70">
                                             <span class="span-label">et</span>
-                                            <input type="number" placeholder="ex: 220">
+                                            <input id="N2" type="number" placeholder="ex: 220">
                                         </p>
                                     </div>
                                 </form>
@@ -68,41 +102,48 @@
             <div class="col-xs-12">
                 <div class="result">
                     <div class="ingredients row" id="byby">
-                        @foreach( var item in Model.Take( ( int )ViewData["LimiteIngredient"] ) )
-                        {
-                            <div class="col-xs-12 ingredient">
-                                <div class="ing-wrap">
-                                    <div class="top">
-                                        <p class="name">@item.Name</p>
-                                        <p class="category">@item.CategoriesForeignKey</p>
-                                        <img class="img" src="~/img/ingredients/@item.Picture" alt="Poulet">
-                                        <div class="calories-wrap">
-                                            <div class="val">
-                                                <span>@item.Calories kcal</span>
-                                                <div class="battery">
-                                                    pourcentage ci-dessous à moduler en fonction du nombre de calories de l'ingredient sur nombre de calories max
-                                                    <div class="level" style="width: 60%;"></div>
+                        @{
+                            if( ( SerchByName != null ) && ( SerchByName.Count() > 0 ) )
+                            {
+                                TempsList = SerchByName;
+                               
+                            }
+                            foreach( var item in TempsList )
+                            {
+                                <div class="col-xs-12 ingredient">
+                                    <div class="ing-wrap">
+                                        <div class="top">
+                                            <p class="name">@item.Name</p>
+                                            <p class="category">@item.CategoriesForeignKey</p>
+                                            <img class="img" src="~/img/ingredients/@item.Picture" alt="Poulet">
+                                            <div class="calories-wrap">
+                                                <div class="val">
+                                                    <span>@item.Calories kcal</span>
+                                                    <div class="battery">
+                                                        <!-- pourcentage ci-dessous à moduler en fonction du nombre de calories de l'ingredient sur nombre de calories max -->
+                                                        <div class="level" style="width: 60%;"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="bot">
-                                        <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo pariatur obcaecati ut, sit veniam molestias eius cum. Facere quibusdam laborum doloribus, incidunt omnis ipsum alias vel est molestiae.</p>
-                                        <div class="list">
-                                            <p class="list-title">Aliments similaires</p>
-                                            <ul>
-                                                @foreach( var item1 in Model.Where( x => x.CategoriesForeignKey.Equals( item.CategoriesForeignKey ) ).Reverse().Take( 4 ) )
-                                                {
-                                                    <li class="item">
-                                                        <img class="item-img" src="~/img/ingredients/@item1.Picture" alt="Boeuf">
-                                                        <p class="item-name" title="Boeuf">@item1.Name</p>
-                                                    </li>
-                                                }
-                                            </ul>
+                                        <div class="bot">
+                                            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quo pariatur obcaecati ut, sit veniam molestias eius cum. Facere quibusdam laborum doloribus, incidunt omnis ipsum alias vel est molestiae.</p>
+                                            <div class="list">
+                                                <p class="list-title">Aliments similaires</p>
+                                                <ul>
+                                                    @foreach( var item1 in Model.Where( x => x.CategoriesForeignKey.Equals( item.CategoriesForeignKey ) ).Where( t => t.Name != item.Name ).Take( 4 ) )
+                                                    {
+                                                        <li class="item">
+                                                            <img class="item-img" src="~/img/ingredients/@item1.Picture" alt="Boeuf">
+                                                            <p class="item-name" title="Boeuf">@item1.Name</p>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         }
                     </div>
                 </div>
@@ -110,14 +151,11 @@
                     <div class="col-xs-12">
                         <button type="button" id="btn" class="btn btn_color1">
                             <span class="glyphicon glyphicon-chevron-down"></span>
-
                             @Html.ActionLink( "Afficher d'avantage", "Index", "Ingredients" )
-
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
