@@ -4,10 +4,38 @@
     ViewBag.Title = "Details";
     var galList = ViewData["Recette"] as List<NgCooking_Asp.net.Models.Recettes>;
     int SommeCalorie = 0;
-
     int ind = ( (int)ViewData["indice"] > 0 ) ? (int)ViewData["indice"] : 1;
-
 }
+
+<script>
+
+    
+    $(function () {
+        $('#AddComment').click(function () {
+            var url = "/Recettes/InsertCommentaire/";
+            var Note = $('#Note').val();
+            var Titre = $('#Titre').val();
+            var Comm = $('#Comm').val();
+            var recette =  '@(Model.recettesId)';
+           
+            $.ajax({
+                url: url,
+                data: JSON.stringify([Note, Titre, Comm, recette ]),
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                success: function (data) {
+                    window.location.reload();
+                    
+                },
+                error: function (reponse) {
+                    window.location.reload();
+                }
+            });
+        });
+    });
+
+
+</script>
 
 <div class="col-xs-12 col-sm-9">
     <div class="content" id="content_recettes_details">
@@ -85,7 +113,7 @@
                                 <div class="filter">
                                     <p><label for="">Notez cette recette</label></p>
                                     <p>
-                                        @Html.DropDownList( "Trie", ViewData["Vote"] as List<SelectListItem> )
+                                        @Html.DropDownList( "Note", ViewData["Vote"] as List<SelectListItem> )
                                     </p>
 
 
@@ -93,14 +121,16 @@
                                 </div>
                                 <div class="filter">
                                     <p><label for="">Le titre de votre commentaire</label></p>
-                                    <p><input type="text" placeholder="ex: Amazingue !" required></p>
+                                    <p><input id="Titre" type="text" placeholder="ex: Amazingue !" required></p>
                                 </div>
                                 <div class="filter">
                                     <p><label for="">Votre commentaire</label></p>
-                                    <textarea name="" id="" class="wide" placeholder="ex: Franchement cette NgRecette, c’est de la bombe. Le genre de saveurs qui t’éveillent les papilles, t’as vu ! Woula, j’ai kiffé" required></textarea>
+                                    <textarea name="" id="Comm" class="wide" placeholder="ex: Franchement cette NgRecette, c’est de la bombe. Le genre de saveurs qui t’éveillent les papilles, t’as vu ! Woula, j’ai kiffé" required></textarea>
                                 </div>
                                 <div class="ar">
-                                    <input type="submit" class="btn btn_color1" value="Poster !">
+                                    <input id="AddComment" type="button" class="btn btn_color1" value="Poster !">
+
+
                                 </div>
                             </form>
                         </div>

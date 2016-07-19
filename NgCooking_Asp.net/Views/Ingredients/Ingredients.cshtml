@@ -5,10 +5,10 @@
     var SerchByName = ViewData["dataByName"] as List<NgCooking_Asp.net.Models.Ingredients>;
     var TempsList = Model.ToList().Take(4);
     var model = ViewData["Model"] as List<NgCooking_Asp.net.Models.Ingredients>;
-    
+
 }
 <script>
-     
+
     function AjaxPost(url, Aux) {
         $.ajax({
             url: url,
@@ -42,25 +42,24 @@
             var url = "/Ingredients/SearchByCalorie/";
             var N1 = $('#N1').val();
             var N2 = $('#N2').val();
-  
+
             $.ajax({
                 url: url,
                 data: JSON.stringify([N1, N2]),
-                 
+
                 contentType: 'application/json; charset=utf-8',
                 type: "POST",
                 success: function (data) {
-                    alert(data);
                     $("body").html(data);
                 },
                 error: function (reponse) {
                 }
             });
-             
+
         });
     });
 
-    
+
 
 </script>
 <div id="" class="col-xs-12 col-sm-9">
@@ -81,7 +80,7 @@
                                     <div class="filter">
                                         <p><label for="">Catégorie</label></p>
                                         <p>
-                                            @Html.DropDownList( "SearchByCategorie", new SelectList( model.Select( x => x.CategoriesForeignKey ).Distinct().ToList().ConvertAll( d => d.ToUpper() ) ),"",new object() )
+                                            @Html.DropDownList( "SearchByCategorie", new SelectList( model.Select( x => x.CategoriesForeignKey ).Distinct().ToList().ConvertAll( d => d.ToUpper() ) ), "", new object() )
                                         </p>
                                     </div>
                                     <div class="filter">
@@ -106,7 +105,7 @@
                             if( ( SerchByName != null ) && ( SerchByName.Count() > 0 ) )
                             {
                                 TempsList = SerchByName;
-                               
+
                             }
                             foreach( var item in TempsList )
                             {

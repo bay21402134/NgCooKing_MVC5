@@ -1,12 +1,10 @@
-﻿  
-@model IEnumerable<NgCooking_Asp.net.Models.Recettes>
+﻿@model IEnumerable<NgCooking_Asp.net.Models.Recettes>
 
 @{
     ViewBag.Title = "Recettes";
     var SerchByName = ViewData["dataByName"] as List<NgCooking_Asp.net.Models.Recettes>;
-    var TempsList = Model.ToList().Take(4);
+    var TempsList = SerchByName;
     var model = ViewData["Model"] as List<NgCooking_Asp.net.Models.Recettes>;
-
 }
 
 <script>
@@ -27,18 +25,25 @@
     $(function () {
         $('#SearchByName').change(function () {
             var url = "/Recettes/SearchByName/";
-            var Aux = $('#SearchByName').val();
+            var Aux = $('#SearchByName').val();             
+            AjaxPost(url, Aux);
+        });
+    });
+    $(function () {
+        $('#SearchByIngredients').change(function () {
+            var url = "/Recettes/SearchByIngredients/";
+            var Aux = $('#SearchByIngredients').val();
             AjaxPost(url, Aux);
         });
     });
 
-</script>
 
+
+</script>
 
 <div class="col-xs-12 col-sm-9">
     <div class="content" id="content_recettes">
         <h1 class="page-title">Les recettes</h1>
-
         <section class="section">
             <h2 class="title">~ Trouver une recette ~</h2>
             <div class="panel">
@@ -53,7 +58,7 @@
                                 </div>
                                 <div class="filter">
                                     <p><label for="">Ingrédient(s) utlisé(s) pour la recette</label></p>
-                                    <p><input type="text" placeholder="ex: poulet;oeuf;farine"></p>
+                                    <p><input id="SearchByIngredients" type="text" placeholder="ex: poulet;oeuf;farine"></p>
                                 </div>
                                 <div class="filter">
                                     <p><label for="">Valeur calorique de la recette <span class="fwn">(kcal/100g)</span></label></p>
@@ -84,80 +89,80 @@
                     </select>
                 </p>
             </div>
-            <div class="result">
-                <div class="recettes row">
-                    <p class="col-xs-12 blank" >Aucune recette ne correspond à votre recherche</p>
-                     
-                </div>
-            </div>
-            
+
+            @{
+                if( ( SerchByName == null ) || ( SerchByName.Count() == 0 ) )
+                {
+                    <div class="result">
+                        <div class="recettes row">
+                            <p class="col-xs-12 blank">Aucune recette ne correspond à votre recherche</p>
+                        </div>
+                    </div>
+                }
+            }
         </section>
+
         <section class="section">
-            <h2 class="title">~ Meilleures recettes ~</h2>
+            @*<h2 class="title">~ Meilleures recettes ~</h2>*@
             <div class="recettes row">
-
-                @{ 
-
+                @{
+                  
                     if( ( SerchByName != null ) && ( SerchByName.Count() > 0 ) )
                     {
-                        TempsList = SerchByName;
 
-                    }
 
-                    foreach( var item in Model.Take( 4 ) )
+                        foreach( var item in TempsList )
+                        {
 
-                    {
-
-                    <div class="col-xs-6 col-sm-3 recette">
-                        <a href="Details/@item.recettesId">
-                            <img src="~/@item.picture" alt="Le tajine de ta maman">
-                            <div class="top" title="note : 3,2/5">
-                                <span class="note">
-                                    @{
-                                        int somme = 0;
-                                        int indice = 0;
-                                        foreach( var item1 in item.Comments )
-                                        {
-                                            somme += item1.mark;
-                                            indice++;
-                                        }
-
-                                        if( indice > 0 )
-                                        {
-                                            for( int i = 1 ; i <= somme / indice ; i++ )
+                        <div class="col-xs-6 col-sm-3 recette">
+                            <a href="Details/@item.recettesId">
+                                <img src="~/@item.picture" alt="Le tajine de ta maman">
+                                <div class="top" title="note : 3,2/5">
+                                    <span class="note">
+                                        @{
+                                            int somme = 0;
+                                            int indice = 0;
+                                            foreach( var item1 in item.Comments )
                                             {
-                                                <span class="glyphicon glyphicon-heart"></span>
+                                                somme += item1.mark;
+                                                indice++;
                                             }
-                                        }
-                                        else
-                                        {
 
-                                            for( int i = 1 ; i <= somme ; i++ )
+                                            if( indice > 0 )
                                             {
-                                                <span class="glyphicon glyphicon-heart"></span>
+                                                for( int i = 1 ; i <= somme / indice ; i++ )
+                                                {
+                                                    <span class="glyphicon glyphicon-heart"></span>
+                                                }
                                             }
+                                            else
+                                            {
 
-                                        }
-
-                                    }
-
-                                    }
-                                </span>
-                            </div>
-                            <div class="bot">
-                                <p class="name">@item.recettesId</p>
-                            </div>
-                        </a>
-                    </div>
+                                                for( int i = 1 ; i <= somme ; i++ )
+                                                {
+                                                    <span class="glyphicon glyphicon-heart"></span>
+                                                }
 
                                             }
                                         }
+                                        }
+                                    </span>
+                                </div>
+                                <div class="bot">
+                                    <p class="name">@item.recettesId</p>
+                                </div>
+                            </a>
+                        </div>
+
+                                                }
+                                            }
+                }
             </div>
         </section>
         <section class="section">
             <h2 class="title">~ Nouvelles recettes ~</h2>
             <div class="recettes row">
-                @foreach( var item in Model.Reverse().Take(4))
+                @foreach( var item in model.Take( 4 ).Reverse() )
 
                 {
 

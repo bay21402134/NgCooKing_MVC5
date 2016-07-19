@@ -24,11 +24,29 @@ namespace NgCooking_Asp.net.Controllers
         public ActionResult Recettes()
         {
             ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Recettes.ToList();
             return View( db.Recettes.ToList() );
         }
 
-        public ActionResult ListIngredients2( string ingredients )
-        { return View(); }
+        public ActionResult InsertCommentaire( string[ ] data )
+        {
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Recettes.ToList();
+            Comments comment = new Comments();
+            comment.comment = data[2];
+            comment.mark = int.Parse( data[0] );
+            comment.title = data[1];
+            comment.RecettesrecettesId = data[3];
+
+            if( ModelState.IsValid )
+            {
+                db.Comments.Add( comment );
+                db.SaveChanges();
+                return Json( true );
+            }
+            //var recette = db.Recettes.Find( data[3] );
+            return Json( true );
+        }
 
         public ActionResult ListIngredients( string ingredients )
         {
@@ -41,36 +59,53 @@ namespace NgCooking_Asp.net.Controllers
                 var RangeIng = TempData["ListeIngredient"] as List<Ingredients>;
                 foreach( var item in RangeIng )
                 {
-
-                    if (!(item.ingredientsId == ingredients ))
+                    if( !( item.ingredientsId == ingredients ) )
                     {
                         test.Add( item );
                     }
-                    
+
                 }
                 var unique_items = new HashSet<Ingredients>(RangeIng);
                 test.Add( ing.First() );
                 ViewData["Ingredient"] = test;
                 TempData["ListeIngredient"] = ViewData["Ingredient"];
+
                 return View();
             }
 
             ViewData["Ingredient"] = ing.ToList();
             TempData["ListeIngredient"] = ing.ToList();
-
             return View();
         }
-
         public ActionResult SearchByName( string input )
         {
             ViewData["Recettes"] = db.Recettes.Count();
-            ViewData["Model"] = db.Ingredients.ToList();
+            ViewData["Model"] = db.Recettes.ToList();
             var recettes = db.Recettes.Where(x => x.name.ToLower() == input.ToLower()).ToList();
             ViewData["dataByName"] = recettes;
-            return View( "Ingredients", recettes );
+            return View( "Recettes", recettes );
+        }
+        public ActionResult SearchByIngredients( string input )
+        {
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Recettes.ToList();
+            String[] substrings = input.Split(';');
+            var recettes = db.Recettes.Include(c =>c.Ingredients);
+            List<Recettes> temps = new List<Recettes>();
+
+            foreach( var item in recettes )
+            {
+                var ing = item.Ingredients.Select(c => c.ingredientsId).ToArray();
+                if( ing.Intersect( substrings ).Any() )
+                {
+                    temps.Add( item );
+                }
+            }
+
+            ViewData["dataByName"] = temps;
+            return View( "Recettes", temps );
 
         }
-
 
         // GET: Recettes/Details/5
         public ActionResult Details( string id )
@@ -103,7 +138,6 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( recettes );
         }
-
         public ActionResult IngredientsToCategorie( string stateid )
         {
             List<Ingredients> objcity = new List<Ingredients>();
@@ -119,8 +153,7 @@ namespace NgCooking_Asp.net.Controllers
             ViewData["Categorie"] = db.Categories.Select( s => s.categoriesId ).ToList().ConvertAll( s => s.ToUpper() );
             return View();
         }
-
-
+         
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create( [Bind( Include = "recettesId,calories,creatorId,isAvailable,name,picture,preparation" )] Recettes recettes )
