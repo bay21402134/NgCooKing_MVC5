@@ -7,6 +7,7 @@
     var model = ViewData["Model"] as List<NgCooking_Asp.net.Models.Ingredients>;
 
 }
+
 <script>
 
     function AjaxPost(url, Aux) {
@@ -29,6 +30,7 @@
             AjaxPost(url, Aux);
         });
     });
+
     $(function () {
         $('#SearchByCategorie').change(function () {
             var url = "/Ingredients/SearchByCategorie/";
@@ -46,7 +48,6 @@
             $.ajax({
                 url: url,
                 data: JSON.stringify([N1, N2]),
-
                 contentType: 'application/json; charset=utf-8',
                 type: "POST",
                 success: function (data) {

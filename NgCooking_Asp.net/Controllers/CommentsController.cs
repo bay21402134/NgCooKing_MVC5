@@ -20,7 +20,6 @@ namespace NgCooking_Asp.net.Controllers
             var comments = db.Comments.Include(c => c.Recettes);
             return View(comments.ToList());
         }
-
         // GET: Comments/Details/5
         public ActionResult Details(int? id)
         {
@@ -35,14 +34,12 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View(comments);
         }
-
         // GET: Comments/Create
         public ActionResult Create()
         {
             ViewBag.RecettesrecettesId = new SelectList(db.Recettes, "recettesId", "name");
             return View();
         }
-
         // POST: Comments/Create
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -59,9 +56,7 @@ namespace NgCooking_Asp.net.Controllers
 
             ViewBag.RecettesrecettesId = new SelectList(db.Recettes, "recettesId", "name", comments.RecettesrecettesId);
             return View(comments);
-        }
-
-        // GET: Comments/Edit/5
+        }                // GET: Comments/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -76,7 +71,6 @@ namespace NgCooking_Asp.net.Controllers
             ViewBag.RecettesrecettesId = new SelectList(db.Recettes, "recettesId", "name", comments.RecettesrecettesId);
             return View(comments);
         }
-
         // POST: Comments/Edit/5
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -93,7 +87,6 @@ namespace NgCooking_Asp.net.Controllers
             ViewBag.RecettesrecettesId = new SelectList(db.Recettes, "recettesId", "name", comments.RecettesrecettesId);
             return View(comments);
         }
-
         // GET: Comments/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -108,7 +101,6 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View(comments);
         }
-
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -119,7 +111,6 @@ namespace NgCooking_Asp.net.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

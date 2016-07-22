@@ -29,6 +29,7 @@
             AjaxPost(url, Aux);
         });
     });
+
     $(function () {
         $('#SearchByIngredients').change(function () {
             var url = "/Recettes/SearchByIngredients/";
@@ -37,7 +38,29 @@
         });
     });
 
+    $(function () {
+        $('#N2').change(function () {
+            var url = "/Recettes/SearchByCalorie/";
+            var N1 = $('#N1').val();
+            var N2 = $('#N2').val();             
 
+            $.ajax({
+                url: url,
+                data: JSON.stringify([N1, N2]),
+                contentType: 'application/json; charset=utf-8',
+                type: "POST",
+                success: function (data) {
+                    console.log(data);
+                    $("body").html(data);                     
+                },
+                error: function (reponse) {
+                    console.log(reponse);
+                    
+                }
+            });
+
+        });
+    });
 
 </script>
 
@@ -64,9 +87,9 @@
                                     <p><label for="">Valeur calorique de la recette <span class="fwn">(kcal/100g)</span></label></p>
                                     <p>
                                         <span class="span-label">entre :</span>
-                                        <input type="number" class="mr0" placeholder="ex: 450">
+                                        <input type="number" id="N1" class="mr0" placeholder="ex: 450">
                                         <span class="span-label">et</span>
-                                        <input type="number" placeholder="ex: 750">
+                                        <input type="number" id="N2" placeholder="ex: 750">
                                     </p>
                                 </div>
                             </form>

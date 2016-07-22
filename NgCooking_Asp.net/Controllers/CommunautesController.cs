@@ -34,14 +34,12 @@ namespace NgCooking_Asp.net.Controllers
             TempData["test"] = ViewData["LimitCommunaute"];
             return View( db.Communaute.ToList() );
         }
-
         public ActionResult Communautes()
         {
             ViewData["OrderBy"] = SelectCommunaute();
             ViewData["LimitCommunaute"] = 8;
             return View( "Communautes", db.Communaute.ToList() );
         }
-
         // GET: Communautes/Details/5
         public ActionResult Details( int? id )
         {
@@ -62,13 +60,11 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( communaute );
         }
-
         // GET: Communautes/Create
         public ActionResult Create()
         {
             return View();
         }
-
         // POST: Communautes/Create
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -85,7 +81,6 @@ namespace NgCooking_Asp.net.Controllers
 
             return View( communaute );
         }
-
         // GET: Communautes/Edit/5
         public ActionResult Edit( int? id )
         {
@@ -100,7 +95,6 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( communaute );
         }
-
         // POST: Communautes/Edit/5
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -116,7 +110,6 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( communaute );
         }
-
         // GET: Communautes/Delete/5
         public ActionResult Delete( int? id )
         {
@@ -131,7 +124,6 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( communaute );
         }
-
         // POST: Communautes/Delete/5
         [HttpPost, ActionName( "Delete" )]
         [ValidateAntiForgeryToken]
@@ -142,7 +134,6 @@ namespace NgCooking_Asp.net.Controllers
             db.SaveChanges();
             return RedirectToAction( "Index" );
         }
-
         public List<SelectListItem> SelectCommunaute()
         {
             List<SelectListItem> li = new List<SelectListItem>();

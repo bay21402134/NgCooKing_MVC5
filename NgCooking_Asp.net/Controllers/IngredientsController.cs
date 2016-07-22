@@ -13,9 +13,6 @@ namespace NgCooking_Asp.net.Controllers
     public class IngredientsController : Controller
     {
         private ngCookingDBEntities db = new ngCookingDBEntities();
-
-
-       
         // GET: Ingredients
         public ActionResult Index()
         {
@@ -35,7 +32,6 @@ namespace NgCooking_Asp.net.Controllers
 
             return View( ingredients.ToList() );
         }
-
         public ActionResult Ingredients()
         {
             TempData["test"] = 0;
@@ -45,17 +41,15 @@ namespace NgCooking_Asp.net.Controllers
             var ingredients = db.Ingredients.Include(i => i.Categories);
             return View( ingredients.ToList() );
         }
-
         public ActionResult SearchByCategorie( string input )
-        { 
+        {
             ViewData["Recettes"] = db.Recettes.Count();
             ViewData["Model"] = db.Ingredients.ToList();
             var ingredients = db.Ingredients.Where(x => x.CategoriesForeignKey == input.ToLower()).ToList();
             ViewData["dataByName"] = ingredients;
-            return View( "Ingredients" , ingredients);
-            
-        }
+            return View( "Ingredients", ingredients );
 
+        }
         public ActionResult SearchByCalorie( int[ ] ints )
         {
             ViewData["Recettes"] = db.Recettes.Count();
@@ -67,7 +61,6 @@ namespace NgCooking_Asp.net.Controllers
             return View( "Ingredients", ingredients );
 
         }
-
         public ActionResult SearchByName( string input )
         {
             ViewData["Recettes"] = db.Recettes.Count();
@@ -77,7 +70,6 @@ namespace NgCooking_Asp.net.Controllers
             return View( "Ingredients", ingredients );
 
         }
-
         // GET: Ingredients/Details/5
         public ActionResult Details( string id )
         {
@@ -92,14 +84,12 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( ingredients );
         }
-
         // GET: Ingredients/Create
         public ActionResult Create()
         {
             ViewBag.CategoriesForeignKey = new SelectList( db.Categories, "categoriesId", "nameToDisplay" );
             return View();
         }
-
         // POST: Ingredients/Create
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -117,7 +107,6 @@ namespace NgCooking_Asp.net.Controllers
             ViewBag.CategoriesForeignKey = new SelectList( db.Categories, "categoriesId", "nameToDisplay", ingredients.CategoriesForeignKey );
             return View( ingredients );
         }
-
         // GET: Ingredients/Edit/5
         public ActionResult Edit( string id )
         {
@@ -133,7 +122,6 @@ namespace NgCooking_Asp.net.Controllers
             ViewBag.CategoriesForeignKey = new SelectList( db.Categories, "categoriesId", "nameToDisplay", ingredients.CategoriesForeignKey );
             return View( ingredients );
         }
-
         // POST: Ingredients/Edit/5
         // Afin de déjouer les attaques par sur-validation, activez les propriétés spécifiques que vous voulez lier. Pour 
         // plus de détails, voir  http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -150,7 +138,6 @@ namespace NgCooking_Asp.net.Controllers
             ViewBag.CategoriesForeignKey = new SelectList( db.Categories, "categoriesId", "nameToDisplay", ingredients.CategoriesForeignKey );
             return View( ingredients );
         }
-
         // GET: Ingredients/Delete/5
         public ActionResult Delete( string id )
         {
@@ -165,9 +152,7 @@ namespace NgCooking_Asp.net.Controllers
             }
             return View( ingredients );
         }
-
         // POST: Ingredients/Delete/5
-
         [HttpPost, ActionName( "Delete" )]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed( string id )
@@ -177,7 +162,6 @@ namespace NgCooking_Asp.net.Controllers
             db.SaveChanges();
             return RedirectToAction( "Index" );
         }
-
         protected override void Dispose( bool disposing )
         {
             if( disposing )

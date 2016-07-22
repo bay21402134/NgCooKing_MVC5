@@ -260,7 +260,7 @@
     <Content Include="Views\Ingredients\Bayrem.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Uploads\" />
     <Folder Include="css\" />
     <Folder Include="img\" />
     <Folder Include="js\" />

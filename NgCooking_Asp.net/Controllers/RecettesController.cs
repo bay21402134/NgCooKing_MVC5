@@ -7,7 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using NgCooking_Asp.net.Models;
-using System.Web.Services.Description;
+using System.IO;
 
 namespace NgCooking_Asp.net.Controllers
 {
@@ -20,14 +20,63 @@ namespace NgCooking_Asp.net.Controllers
             ViewData["Recettes"] = db.Recettes.Count();
             return View( db.Recettes.ToList() );
         }
-
         public ActionResult Recettes()
         {
             ViewData["Recettes"] = db.Recettes.Count();
             ViewData["Model"] = db.Recettes.ToList();
             return View( db.Recettes.ToList() );
         }
+        public ActionResult SearchByCalorie( int[ ] ints )
+        {
+            ViewData["Recettes"] = db.Recettes.Count();
+            ViewData["Model"] = db.Ingredients.ToList();
+            int min = ints[0];
+            int max = ints[1];
+            var recettes = db.Recettes.Where(x => x.calories >= min && x.calories <= max ).ToList();
+            ViewData["dataByName"] = db.Recettes.First();
+            return View( "Recettes", db.Recettes.First() );
 
+        }
+        [HttpPost]         
+        public ActionResult Upload( FormCollection fc, HttpPostedFileBase file )
+        {
+            try
+            {
+                var ingredients = TempData["ListeIngredient"] as List<Ingredients>;
+                HttpPostedFileBase photo = Request.Files["file"];
+                Recettes Temp = new Recettes();
+                ViewData["Categorie"] = db.Categories.Select( s => s.categoriesId ).ToList().ConvertAll( s => s.ToUpper() );
+                Temp.recettesId = Request.Form["name"];
+                Temp.name = Request.Form["name"].Replace('-',' ');
+                Temp.isAvailable = true;                 
+                Temp.preparation = Request.Form["preparation"]; 
+                ingredients.ToList().ForEach( x => Temp.Ingredients.Add( db.Ingredients.Find( x.ingredientsId ) ) );
+                Temp.calories = ingredients.Sum( s => s.Calories );
+                Temp.creatorId = 1;
+
+                if( photo != null && photo.ContentLength > 0 )
+                {
+                    var fileName = Path.GetFileName(photo.FileName);
+                    var path = Path.Combine(Server.MapPath(("~/img/recettes/")), fileName);
+                    photo.SaveAs( path );
+                    Temp.picture = "img/recettes/" + fileName;
+                }
+                if( ModelState.IsValid )
+                {
+                    db.Recettes.Add( Temp );
+                    db.SaveChanges();
+                    return View( "Create" );
+                }
+
+
+                return View( "Create" );
+            }
+            catch( Exception e )
+            {
+
+                return View( e.Message );
+            }
+        }
         public ActionResult InsertCommentaire( string[ ] data )
         {
             ViewData["Recettes"] = db.Recettes.Count();
@@ -47,7 +96,6 @@ namespace NgCooking_Asp.net.Controllers
             //var recette = db.Recettes.Find( data[3] );
             return Json( true );
         }
-
         public ActionResult ListIngredients( string ingredients )
         {
             ViewData["Recettes"] = db.Recettes.Count();
@@ -106,7 +154,6 @@ namespace NgCooking_Asp.net.Controllers
             return View( "Recettes", temps );
 
         }
-
         // GET: Recettes/Details/5
         public ActionResult Details( string id )
         {
@@ -147,13 +194,36 @@ namespace NgCooking_Asp.net.Controllers
             return Json( obgcity );
         }
         // GET: Recettes/Create
-        public ActionResult Create()
+        public ActionResult Create( string ingredients )
         {
             ViewData["Recettes"] = db.Recettes.Count();
             ViewData["Categorie"] = db.Categories.Select( s => s.categoriesId ).ToList().ConvertAll( s => s.ToUpper() );
+            var ing = db.Ingredients.Where(x => x.ingredientsId == ingredients).ToList();
+            List<Ingredients> test = new List<Ingredients>();
+            if( TempData.ContainsKey( "ListeIngredient" ) )
+            {
+                var RangeIng = TempData["ListeIngredient"] as List<Ingredients>;
+                foreach( var item in RangeIng )
+                {
+                    if( !( item.ingredientsId == ingredients ) )
+                    {
+                        test.Add( item );
+                    }
+
+                }
+                var unique_items = new HashSet<Ingredients>(RangeIng);
+                test.Add( ing.First() );
+                ViewData["Ingredient"] = test;
+                TempData["ListeIngredient"] = ViewData["Ingredient"];
+
+                return View();
+            }
+
+            ViewData["Ingredient"] = ing.ToList();
+            TempData["ListeIngredient"] = ing.ToList();
+
             return View();
         }
-         
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create( [Bind( Include = "recettesId,calories,creatorId,isAvailable,name,picture,preparation" )] Recettes recettes )
